@@ -6,35 +6,35 @@
       "description": "小T营销的原型设计",
       "prototypes": [
         {
-          "name": "Caogaoxiang",
+          "name": "草稿箱",
           "filename": "caogaoxiang.html",
           "description": "Caogaoxiang - HTML原型",
           "size": "11.9 KB",
           "modified": "2026-05-21"
         },
         {
-          "name": "Generating",
+          "name": "AI生成中",
           "filename": "generating.html",
           "description": "Generating - HTML原型",
           "size": "9.1 KB",
           "modified": "2026-05-21"
         },
         {
-          "name": "Yishengchengfangan",
+          "name": "已生成方案",
           "filename": "YiShengChengFangAn.html",
           "description": "Yishengchengfangan - HTML原型",
           "size": "17.9 KB",
           "modified": "2026-05-21"
         },
         {
-          "name": "Yutianbiaodan",
+          "name": "预填表单",
           "filename": "YuTianBiaoDan.html",
           "description": "Yutianbiaodan - HTML原型",
           "size": "27.7 KB",
           "modified": "2026-05-26"
         },
         {
-          "name": "AnLiKu",
+          "name": "案例库",
           "filename": "AnLiKu.html",
           "description": "AnLiKu - HTML原型",
           "size": "36.2 KB",

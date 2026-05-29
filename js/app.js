@@ -9,8 +9,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
 let prototypeData = { folders: [], ungrouped: [] };
 let selectedFiles = [];
-
-// 使用图片图标而非emoji
+let currentRenameItem = null;
+const UPLOAD_PASSWORD = 'raycolovesocs';
 
 async function loadPrototypes() {
     const grid = document.getElementById('prototypesGrid');
@@ -75,6 +75,7 @@ function renderPrototypes(data) {
                             <div class="actions">
                                 <button onclick="event.stopPropagation(); window.open('prototypes/${proto.filename}', '_blank')">打开</button>
                                 <button onclick="event.stopPropagation(); downloadFile('${proto.filename}')">下载</button>
+                                <button onclick="event.stopPropagation(); openRenameModal('folder', '${folder.id}', '${proto.filename}')">重命名</button>
                             </div>
                         </div>
                     `).join('')}
@@ -98,6 +99,7 @@ function renderPrototypes(data) {
                         <div class="actions">
                             <button onclick="event.stopPropagation(); window.open('prototypes/${proto.filename}', '_blank')">打开</button>
                             <button onclick="event.stopPropagation(); downloadFile('${proto.filename}')">下载</button>
+                            <button onclick="event.stopPropagation(); openRenameModal('ungrouped', null, '${proto.filename}')">重命名</button>
                         </div>
                     </div>
                 </div>
@@ -242,13 +244,38 @@ function createFolder() {
     loadPrototypes();
 }
 
-// 上传功能
+// 密码验证功能
 function handleFileSelect(e) {
     const files = Array.from(e.target.files);
     selectedFiles = selectedFiles.concat(files);
-    showUploadModal();
+    openPasswordModal();
 }
 
+function openPasswordModal() {
+    document.getElementById('passwordModal').classList.add('active');
+    document.getElementById('passwordInput').value = '';
+    document.getElementById('passwordError').textContent = '';
+    document.body.style.overflow = 'hidden';
+}
+
+function closePasswordModal() {
+    document.getElementById('passwordModal').classList.remove('active');
+    document.getElementById('fileInput').value = '';
+    document.body.style.overflow = '';
+}
+
+function verifyPassword() {
+    const password = document.getElementById('passwordInput').value.trim();
+    
+    if (password === UPLOAD_PASSWORD) {
+        closePasswordModal();
+        showUploadModal();
+    } else {
+        document.getElementById('passwordError').textContent = '密码错误，请重试';
+    }
+}
+
+// 上传功能
 function showUploadModal() {
     const modal = document.getElementById('uploadModal');
     const list = document.getElementById('uploadFilesList');
@@ -327,14 +354,105 @@ async function uploadFile(file) {
     }
 }
 
-function saveListJson() {
-    fetch('/save_list', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(prototypeData)
-    }).catch(error => {
+// 重命名功能
+function openRenameModal(type, folderId, filename) {
+    currentRenameItem = { type, folderId, filename };
+    const modal = document.getElementById('renameModal');
+    const input = document.getElementById('renameInput');
+    
+    let currentName = '';
+    if (type === 'folder') {
+        const folder = prototypeData.folders.find(f => f.id === folderId);
+        const proto = folder?.prototypes.find(p => p.filename === filename);
+        currentName = proto?.name || '';
+    } else {
+        const proto = prototypeData.ungrouped.find(p => p.filename === filename);
+        currentName = proto?.name || '';
+    }
+    
+    input.value = currentName;
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeRenameModal() {
+    document.getElementById('renameModal').classList.remove('active');
+    document.getElementById('renameInput').value = '';
+    currentRenameItem = null;
+    document.body.style.overflow = '';
+}
+
+async function confirmRename() {
+    console.log('confirmRename called');
+    
+    const newName = document.getElementById('renameInput').value.trim();
+    console.log('New name:', newName);
+    
+    if (!newName) {
+        alert('请输入新名称');
+        return;
+    }
+    
+    if (!currentRenameItem) {
+        console.error('currentRenameItem is null');
+        alert('发生错误，请重试');
+        return;
+    }
+    
+    console.log('currentRenameItem:', currentRenameItem);
+    
+    const { type, folderId, filename } = currentRenameItem;
+    
+    let found = false;
+    if (type === 'folder') {
+        const folder = prototypeData.folders.find(f => f.id === folderId);
+        console.log('Found folder:', folder);
+        if (folder) {
+            const proto = folder.prototypes.find(p => p.filename === filename);
+            console.log('Found proto:', proto);
+            if (proto) {
+                proto.name = newName;
+                found = true;
+            }
+        }
+    } else {
+        const proto = prototypeData.ungrouped.find(p => p.filename === filename);
+        console.log('Found proto in ungrouped:', proto);
+        if (proto) {
+            proto.name = newName;
+            found = true;
+        }
+    }
+    
+    if (!found) {
+        console.error('Prototype not found for renaming');
+        alert('未找到要重命名的原型');
+        return;
+    }
+    
+    console.log('Saving list.json...');
+    await saveListJson();
+    console.log('List saved, refreshing...');
+    
+    closeRenameModal();
+    loadPrototypes();
+    console.log('Rename completed');
+}
+
+async function saveListJson() {
+    try {
+        const response = await fetch('/save_list', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(prototypeData)
+        });
+        
+        if (!response.ok) {
+            console.warn('保存失败:', response.status);
+        }
+    } catch (error) {
         console.warn('无法保存list.json:', error);
-    });
+    }
 }

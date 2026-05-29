@@ -47,6 +47,7 @@
                     <span class="btn-icon folder-icon"></span>
                     <span>新建文件夹</span>
                 </button>
+                <p class="admin-hint">*仅管理员可在本地操作</p>
             </div>
         </div>
 
@@ -99,6 +100,24 @@
         </div>
     </div>
 
+    <!-- 密码验证弹窗 -->
+    <div id="passwordModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>请输入上传密码</h3>
+                <button class="close-btn" onclick="closePasswordModal()">✕</button>
+            </div>
+            <div class="modal-body">
+                <input type="password" id="passwordInput" placeholder="请输入密码">
+                <p class="error-message" id="passwordError"></p>
+            </div>
+            <div class="modal-footer">
+                <button class="cancel-btn" onclick="closePasswordModal()">取消</button>
+                <button class="confirm-btn" onclick="verifyPassword()">确认</button>
+            </div>
+        </div>
+    </div>
+
     <!-- 上传进度弹窗 -->
     <div id="uploadModal" class="modal">
         <div class="modal-content">
@@ -115,6 +134,23 @@
             <div class="modal-footer">
                 <button class="cancel-btn" onclick="closeUploadModal()">取消</button>
                 <button class="confirm-btn" onclick="startUpload()">开始上传</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 重命名弹窗 -->
+    <div id="renameModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>重命名原型</h3>
+                <button class="close-btn" onclick="closeRenameModal()">✕</button>
+            </div>
+            <div class="modal-body">
+                <input type="text" id="renameInput" placeholder="请输入新名称">
+            </div>
+            <div class="modal-footer">
+                <button class="cancel-btn" onclick="closeRenameModal()">取消</button>
+                <button class="confirm-btn" onclick="confirmRename()">确认</button>
             </div>
         </div>
     </div>
