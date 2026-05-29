@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>云商通 · 案例库管理后台</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #f0f2f6;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            padding: 30px 32px;
+            color: #1e293b;
+        }
+
+        /* 主容器 */
+        .case-container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 28px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+
+        /* 头部 */
+        .header {
+            padding: 24px 28px 16px 28px;
+            border-bottom: 1px solid #e9edf2;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            background: #ffffff;
+        }
+
+        .title-section h1 {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #1f3a6b, #2a5f8a);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+        .title-section p {
+            font-size: 13px;
+            color: #5b6e8c;
+            margin-top: 6px;
+        }
+
+        /* 角色切换 */
+        .role-switch {
+            background: #f1f5f9;
+            border-radius: 60px;
+            padding: 4px;
+            display: flex;
+            gap: 8px;
+        }
+        .role-btn {
+            border: none;
+            background: transparent;
+            padding: 8px 24px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.2s;
+            color: #475569;
+        }
+        .role-btn.active {
+            background: white;
+            color: #1e40af;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+
+        /* 筛选栏 */
+        .filter-bar {
+            padding: 20px 28px;
+            background: #fafcff;
+            border-bottom: 1px solid #eef2f8;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            align-items: flex-end;
+        }
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            min-width: 140px;
+        }
+        .filter-group label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #4a5a72;
+        }
+        select, input, .filter-group .mock-select {
+            background: white;
+            border: 1px solid #cfdde6;
+            border-radius: 20px;
+            padding: 8px 14px;
+            font-size: 13px;
+            outline: none;
+            cursor: pointer;
+        }
+        .btn-primary {
+            background: #2a5f8a;
+            border: none;
+            border-radius: 40px;
+            padding: 8px 22px;
+            color: white;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .btn-primary:hover {
+            background: #1f4a6e;
+        }
+        .btn-outline {
+            background: white;
+            border: 1px solid #cbd5e1;
+            border-radius: 40px;
+            padding: 8px 20px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        /* 操作按钮样式 */
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .action-btn {
+            padding: 6px 14px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            transition: 0.15s;
+        }
+        .action-btn-preview {
+            background: #eef2ff;
+            color: #1e40af;
+        }
+        .action-btn-preview:hover {
+            background: #e0e7ff;
+        }
+        .action-btn-download {
+            background: #f0fdf4;
+            color: #16a34a;
+        }
+        .action-btn-download:hover {
+            background: #dcfce7;
+        }
+        .action-btn-edit {
+            background: #fefce8;
+            color: #ca8a04;
+        }
+        .action-btn-edit:hover {
+            background: #fef9c3;
+        }
+        .action-btn-delete {
+            background: #fef2f2;
+            color: #dc2626;
+        }
+        .action-btn-delete:hover {
+            background: #fee2e2;
+        }
+
+        /* 库标签导航 */
+        .library-tabs {
+            padding: 0 28px;
+            display: flex;
+            gap: 28px;
+            border-bottom: 1px solid #eef2f8;
+            background: white;
+        }
+        .lib-tab {
+            padding: 14px 0 12px;
+            font-weight: 600;
+            font-size: 15px;
+            color: #5d6f8f;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+        }
+        .lib-tab.active {
+            color: #2a5f8a;
+            border-bottom-color: #2a5f8a;
+        }
+
+        /* 分公司多选下拉sheet (简化的下拉面板) */
+        .branch-multiselect {
+            position: relative;
+            min-width: 180px;
+        }
+        .branch-dropdown-btn {
+            background: white;
+            border: 1px solid #cfdde6;
+            border-radius: 20px;
+            padding: 8px 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            font-size: 13px;
+        }
+        .branch-panel {
+            position: absolute;
+            top: 42px;
+            left: 0;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            width: 200px;
+            z-index: 100;
+            display: none;
+            padding: 12px;
+        }
+        .branch-panel.show {
+            display: block;
+        }
+        .branch-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+            font-size: 13px;
+        }
+
+        /* 案例表格 */
+        .case-table-wrapper {
+            padding: 20px 28px 32px;
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+        th {
+            text-align: left;
+            padding: 14px 8px;
+            background: #f8fafc;
+            color: #334155;
+            font-weight: 600;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        td {
+            padding: 14px 8px;
+            border-bottom: 1px solid #f0f2f5;
+            vertical-align: middle;
+        }
+        .case-name {
+            font-weight: 600;
+            color: #1e293b;
+        }
+        .tag {
+            background: #eef2ff;
+            color: #1e40af;
+            border-radius: 20px;
+            padding: 4px 10px;
+            font-size: 12px;
+            display: inline-block;
+            white-space: nowrap;
+        }
+        .action-icons button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            margin-right: 12px;
+            font-size: 18px;
+            transition: 0.1s;
+        }
+        .upload-overwrite {
+            color: #2c6e2c;
+        }
+        .empty-row {
+            text-align: center;
+            padding: 40px;
+            color: #8ba0bc;
+        }
+
+        /* 模态框 (上传/编辑案例) */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.4);
+            backdrop-filter: blur(3px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            visibility: hidden;
+            opacity: 0;
+            transition: 0.2s;
+        }
+        .modal.show {
+            visibility: visible;
+            opacity: 1;
+        }
+        .modal-content {
+            background: white;
+            width: 540px;
+            max-width: 90%;
+            border-radius: 32px;
+            padding: 28px 30px;
+            box-shadow: 0 30px 40px rgba(0,0,0,0.2);
+        }
+        .modal-content h3 {
+            font-size: 22px;
+            margin-bottom: 20px;
+        }
+        .form-row {
+            margin-bottom: 20px;
+        }
+        .form-row label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 6px;
+            font-size: 13px;
+        }
+        .form-row input, .form-row select, .form-row textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #cfdde6;
+            border-radius: 24px;
+            font-size: 14px;
+        }
+        .radio-group {
+            display: flex;
+            gap: 20px;
+            margin-top: 6px;
+        }
+        .modal-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 24px;
+        }
+        .file-info {
+            font-size: 12px;
+            color: #4b6b8f;
+            margin-top: 6px;
+        }
+    </style>
+</head>
+<body>
+<div class="case-container">
+    <!-- 头部 & 角色切换 -->
+    <div class="header">
+        <div class="title-section">
+            <h1>方案案例库·营销中台</h1>
+            <p>总部统一管理，分公司共享标杆案例，赋能AI方案生成</p>
+        </div>
+        <div class="role-switch" id="roleSwitch">
+            <button class="role-btn active" data-role="headquarters">总部人员</button>
+            <button class="role-btn" data-role="branch">分公司人员</button>
+        </div>
+    </div>
+
+    <!-- 筛选栏 -->
+    <div class="filter-bar">
+        <div class="filter-group">
+            <label>客户名称</label>
+            <input type="text" id="filterCustomer" placeholder="输入客户名" autocomplete="off">
+        </div>
+        <div class="filter-group">
+            <label>行业</label>
+            <select id="filterIndustry">
+                <option value="">全部行业</option>
+                <option value="生产制造">生产制造</option>
+                <option value="商超百购">商超百购</option>
+                <option value="电商">电商</option>
+                <option value="零售">零售</option>
+                <option value="餐饮">餐饮</option>
+                <option value="保险">保险</option>
+                <option value="教育">教育</option>
+                <option value="自助设备">自助设备</option>
+                <option value="其他">其他</option>
+            </select>
+        </div>
+        <div class="filter-group">
+            <label>所属分公司</label>
+            <select id="filterBranch">
+                <option value="">全部</option>
+                <option>江苏分公司</option><option>浙江分公司</option><option>广东分公司</option><option>北京分公司</option>
+            </select>
+        </div>
+        <div class="filter-group">
+            <label>开放范围</label>
+            <select id="filterScope">
+                <option value="">全部</option>
+                <option>总部私有</option><option>分公司私有</option><option>公开库</option>
+            </select>
+        </div>
+        <div style="display: flex; gap: 10px;">
+            <button class="btn-primary" id="searchBtn">筛选</button>
+            <button class="btn-outline" id="resetFilterBtn">重置</button>
+        </div>
+    </div>
+
+    <!-- 库选项卡 + 上传按钮 -->
+    <div style="display: flex; justify-content: space-between; align-items: center; padding-right: 28px;">
+        <div class="library-tabs" id="libraryTabs">
+            <div class="lib-tab active" id="headquartersLibTab" data-lib="headquarters_lib">总部案例库</div>
+            <div class="lib-tab" id="branchLibTab" data-lib="branch_lib">分公司案例库</div>
+            <div class="lib-tab" id="publicLibTab" data-lib="public_lib">公开库</div>
+        </div>
+        <button class="btn-primary" id="uploadCaseBtn" style="margin-bottom: 12px;">+ 上传案例</button>
+    </div>
+
+    <!-- 分公司多选快捷指示器 (仅当选择分公司库时显示) -->
+    <div id="branchSelectorWrapper" style="padding: 0 28px 10px 28px; display: none;">
+        <div class="branch-multiselect">
+            <div class="branch-dropdown-btn" id="branchDropdownBtn">选择分公司 (多选) ▼</div>
+            <div class="branch-panel" id="branchPanel">
+                <div class="branch-option"><input type="checkbox" value="江苏分公司"> 江苏分公司</div>
+                <div class="branch-option"><input type="checkbox" value="浙江分公司"> 浙江分公司</div>
+                <div class="branch-option"><input type="checkbox" value="广东分公司"> 广东分公司</div>
+                <div class="branch-option"><input type="checkbox" value="北京分公司"> 北京分公司</div>
+                <button id="confirmBranchSelect" style="margin-top: 8px; width:100%; background:#eef2ff; border:none; border-radius:20px; padding:6px;">确定</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 案例表格 -->
+    <div class="case-table-wrapper">
+        <table id="caseTable">
+            <thead>
+            <tr><th>案例名称</th><th>客户名称</th><th>行业</th><th>所属分公司</th><th>开放范围</th><th>最后更新</th><th>操作</th></tr>
+            </thead>
+            <tbody id="caseTableBody">
+            <tr><td colspan="7" class="empty-row">加载案例数据...</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- 上传/编辑模态框 -->
+<div id="caseModal" class="modal">
+    <div class="modal-content">
+        <h3 id="modalTitle">上传新案例</h3>
+        <div class="form-row">
+            <label>选择案例文件 (PPT/PDF/DOC)</label>
+            <input type="file" id="caseFile" accept=".pptx,.pdf,.docx">
+            <div class="file-info" id="fileStatus">未选择文件</div>
+        </div>
+        <div class="form-row"><label>客户名称 *</label><input id="caseCustomer" placeholder="例: 百步印社"></div>
+        <div class="form-row"><label>行业 *</label><select id="caseIndustry"><option value="生产制造">生产制造</option><option value="商超百购">商超百购</option><option value="电商">电商</option><option value="零售">零售</option><option value="餐饮">餐饮</option><option value="保险">保险</option><option value="教育">教育</option><option value="自助设备">自助设备</option><option value="其他">其他</option></select></div>
+        <div class="form-row"><label>开放范围</label>
+            <div class="radio-group" id="scopeRadioGroup"><label><input type="radio" name="scope" value="headquarters_private"> 总部私有</label><label><input type="radio" name="scope" value="branch_private"> 分公司私有</label><label><input type="radio" name="scope" value="public"> 公开库</label></div>
+        </div>
+        <div class="form-row" id="branchField" style="display:none;"><label>所属分公司</label><select id="caseBranch"><option value="">总部(无分公司)</option><option>江苏分公司</option><option>浙江分公司</option><option>广东分公司</option><option>北京分公司</option></select></div>
+        <div class="form-row" id="branchScopeHint" style="font-size:12px; color:#a85555; display:none;">* 分公司私有需选择具体分公司</div>
+        <div class="modal-buttons"><button class="btn-outline" id="closeModalBtn">取消</button><button class="btn-primary" id="saveCaseBtn">保存案例</button></div>
+    </div>
+</div>
+
+<script>
+    // ---------- 模拟案例库数据 ----------
+    let cases = [
+        // 总部私有案例
+        { id: "c1", name: "总部金融方案_VIP客户", customer: "总部VIP客户", industry: "保险", branch: "", scope: "headquarters_private", fileRef: "file1", updated: "2025-05-15" },
+        { id: "c2", name: "集团采购平台_生产制造", customer: "集团采购平台", industry: "生产制造", branch: "", scope: "headquarters_private", fileRef: "file2", updated: "2025-05-14" },
+        { id: "c3", name: "总部电商运营方案", customer: "总部电商", industry: "电商", branch: "", scope: "headquarters_private", fileRef: "file3", updated: "2025-05-13" },
+        { id: "c4", name: "总部教育培训体系", customer: "总部培训", industry: "教育", branch: "", scope: "headquarters_private", fileRef: "file4", updated: "2025-05-12" },
+        
+        // 江苏分公司私有案例
+        { id: "c5", name: "百步印社_自助设备", customer: "百步印社", industry: "自助设备", branch: "江苏分公司", scope: "branch_private", fileRef: "file5", updated: "2025-05-10" },
+        { id: "c6", name: "南京美食城_餐饮", customer: "南京美食城", industry: "餐饮", branch: "江苏分公司", scope: "branch_private", fileRef: "file6", updated: "2025-05-09" },
+        { id: "c7", name: "苏州超市连锁_商超百购", customer: "苏州超市连锁", industry: "商超百购", branch: "江苏分公司", scope: "branch_private", fileRef: "file7", updated: "2025-05-08" },
+        
+        // 浙江分公司私有案例
+        { id: "c8", name: "拉布布菜市场_餐饮", customer: "拉布布菜市场", industry: "餐饮", branch: "浙江分公司", scope: "branch_private", fileRef: "file8", updated: "2025-05-07" },
+        { id: "c9", name: "杭州新零售体验店", customer: "杭州新零售", industry: "零售", branch: "浙江分公司", scope: "branch_private", fileRef: "file9", updated: "2025-05-06" },
+        { id: "c10", name: "宁波电商产业园", customer: "宁波电商园", industry: "电商", branch: "浙江分公司", scope: "branch_private", fileRef: "file10", updated: "2025-05-05" },
+        
+        // 广东分公司私有案例
+        { id: "c11", name: "深圳科技孵化器_其他", customer: "深圳孵化器", industry: "其他", branch: "广东分公司", scope: "branch_private", fileRef: "file11", updated: "2025-05-11" },
+        { id: "c12", name: "广州连锁便利店", customer: "广州便利店", industry: "零售", branch: "广东分公司", scope: "branch_private", fileRef: "file12", updated: "2025-05-10" },
+        
+        // 北京分公司私有案例
+        { id: "c13", name: "北京教育培训机构", customer: "北京教育", industry: "教育", branch: "北京分公司", scope: "branch_private", fileRef: "file13", updated: "2025-05-14" },
+        { id: "c14", name: "北京保险代理公司", customer: "北京保险", industry: "保险", branch: "北京分公司", scope: "branch_private", fileRef: "file14", updated: "2025-05-13" },
+        
+        // 公开库案例
+        { id: "c15", name: "王力云店_零售", customer: "王力云店", industry: "零售", branch: "", scope: "public", fileRef: "file15", updated: "2025-05-08" },
+        { id: "c16", name: "智橙便利店_零售", customer: "智橙便利店", industry: "零售", branch: "广东分公司", scope: "public", fileRef: "file16", updated: "2025-05-14" },
+        { id: "c17", name: "全国餐饮连锁方案", customer: "全国餐饮", industry: "餐饮", branch: "", scope: "public", fileRef: "file17", updated: "2025-05-12" },
+        { id: "c18", name: "通用商超解决方案", customer: "通用商超", industry: "商超百购", branch: "", scope: "public", fileRef: "file18", updated: "2025-05-11" },
+        { id: "c19", name: "电商平台通用方案", customer: "电商平台", industry: "电商", branch: "", scope: "public", fileRef: "file19", updated: "2025-05-09" },
+        { id: "c20", name: "自助设备标准方案", customer: "自助设备", industry: "自助设备", branch: "", scope: "public", fileRef: "file20", updated: "2025-05-07" }
+    ];
+    let currentRole = "headquarters";   // headquarters / branch
+    let currentLib = "headquarters_lib"; // headquarters_lib, branch_lib, public_lib
+    let selectedBranches = [];  // 分公司多选 (仅当库视图为分公司库时使用)
+
+    // 辅助: 判断案例在当前角色+库+筛选条件下是否可见
+    function isCaseVisible(c) {
+        // 根据当前选中的库类型 (总部库/分公司库/公开库)
+        if (currentLib === "headquarters_lib") {
+            if (c.scope !== "headquarters_private") return false;
+            // 总部人员可以看到总部私有案例；分公司人员看总部私有需额外？总部私有仅总部可见
+            if (currentRole !== "headquarters") return false;
+        }
+        else if (currentLib === "branch_lib") {
+            if (c.scope !== "branch_private") return false;
+            // 如果是总部人员查看分公司库：展示所有 branch_private 案例；
+            // 如果是分公司人员查看分公司库：仅显示所属分公司匹配且branch_private案例
+            if (currentRole === "branch") {
+                // 模拟当前登录分公司为江苏分公司（demo演示固定为江苏）
+                const userBranch = "江苏分公司";
+                if (c.branch !== userBranch) return false;
+            } else {
+                // 总部人员查看分公司库时，还要通过多选分公司筛选
+                if (selectedBranches.length > 0 && !selectedBranches.includes(c.branch)) return false;
+            }
+        }
+        else if (currentLib === "public_lib") {
+            if (c.scope !== "public") return false;
+        }
+        // 额外的筛选条件
+        const filterCustomer = document.getElementById('filterCustomer').value.trim().toLowerCase();
+        if (filterCustomer && !c.customer.toLowerCase().includes(filterCustomer)) return false;
+        const industryFilter = document.getElementById('filterIndustry').value;
+        if (industryFilter && c.industry !== industryFilter) return false;
+        const branchFilter = document.getElementById('filterBranch').value;
+        if (branchFilter && c.branch !== branchFilter) return false;
+        const scopeFilter = document.getElementById('filterScope').value;
+        if (scopeFilter === "总部私有" && c.scope !== "headquarters_private") return false;
+        if (scopeFilter === "分公司私有" && c.scope !== "branch_private") return false;
+        if (scopeFilter === "公开库" && c.scope !== "public") return false;
+        return true;
+    }
+
+    function renderTable() {
+        const filtered = cases.filter(isCaseVisible);
+        const tbody = document.getElementById('caseTableBody');
+        if (filtered.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="7" class="empty-row">暂无案例，请点击【上传案例】添加</td></tr>';
+            return;
+        }
+        tbody.innerHTML = filtered.map(c => {
+            const isHeadquarters = currentRole === 'headquarters';
+            const canEditDelete = isHeadquarters || (currentLib === 'branch_lib');
+            const actions = canEditDelete ? `
+                <button class="action-btn action-btn-preview" data-id="${c.id}" onclick="previewCase('${c.id}')">预览</button>
+                <button class="action-btn action-btn-download" data-id="${c.id}" onclick="downloadCase('${c.id}')">下载</button>
+                <button class="action-btn action-btn-edit" data-id="${c.id}" onclick="openEditCase('${c.id}')">编辑</button>
+                <button class="action-btn action-btn-delete" data-id="${c.id}" onclick="deleteCase('${c.id}')">删除</button>
+            ` : `
+                <button class="action-btn action-btn-preview" data-id="${c.id}" onclick="previewCase('${c.id}')">预览</button>
+                <button class="action-btn action-btn-download" data-id="${c.id}" onclick="downloadCase('${c.id}')">下载</button>
+            `;
+            return `
+                <tr>
+                    <td class="case-name">${escapeHtml(c.name)}</td>
+                    <td>${escapeHtml(c.customer)}</td>
+                    <td><span class="tag">${c.industry}</span></td>
+                    <td>${c.branch || '—'}</td>
+                    <td>${c.scope === 'headquarters_private' ? '总部私有' : (c.scope === 'branch_private' ? '分公司私有' : '公开库')}</td>
+                    <td>${c.updated}</td>
+                    <td class="action-buttons">${actions}</td>
+                </tr>
+            `;
+        }).join('');
+    }
+
+    function escapeHtml(str) { if(!str) return ''; return str.replace(/[&<>]/g, function(m){ if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;});}
+
+    // 预览案例
+    function previewCase(id) {
+        const c = cases.find(ca => ca.id === id);
+        if(c) {
+            alert(`预览案例：${c.name}\n\n客户：${c.customer}\n行业：${c.industry}\n开放范围：${c.scope === 'headquarters_private' ? '总部私有' : (c.scope === 'branch_private' ? '分公司私有' : '公开库')}`);
+        }
+    }
+
+    // 下载案例
+    function downloadCase(id) {
+        const c = cases.find(ca => ca.id === id);
+        if(c) {
+            const blob = new Blob([`【案例文件】\n名称：${c.name}\n客户：${c.customer}\n行业：${c.industry}\n所属分公司：${c.branch || '总部'}\n开放范围：${c.scope === 'headquarters_private' ? '总部私有' : (c.scope === 'branch_private' ? '分公司私有' : '公开库')}\n最后更新：${c.updated}`], {type: "application/octet-stream"});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${c.name}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            alert(`正在下载：${c.name}`);
+        }
+    }
+
+    // 删除案例
+    function deleteCase(id) {
+        if(confirm('确定要删除这个案例吗？')) {
+            const idx = cases.findIndex(c => c.id === id);
+            if(idx !== -1) {
+                cases.splice(idx, 1);
+                renderTable();
+                alert('案例已删除');
+            }
+        }
+    }
+
+    // 上传/编辑模态逻辑
+    let currentEditId = null;
+    function openUploadModal(editId = null) {
+        currentEditId = editId;
+        const modal = document.getElementById('caseModal');
+        const title = document.getElementById('modalTitle');
+        const scopeRadioGroup = document.getElementById('scopeRadioGroup');
+        const branchField = document.getElementById('branchField');
+        const branchScopeHint = document.getElementById('branchScopeHint');
+        
+        // 根据角色设置权限
+        if(currentRole === 'branch') {
+            // 分公司人员：隐藏总部私有选项和所属分公司字段
+            scopeRadioGroup.querySelectorAll('input[name="scope"]').forEach(rad => {
+                if(rad.value === 'headquarters_private') {
+                    rad.parentElement.style.display = 'none';
+                } else {
+                    rad.parentElement.style.display = '';
+                }
+            });
+            branchField.style.display = 'none';
+            branchScopeHint.style.display = 'none';
+        } else {
+            // 总部人员：显示所有选项，默认隐藏所属分公司
+            scopeRadioGroup.querySelectorAll('input[name="scope"]').forEach(rad => {
+                rad.parentElement.style.display = '';
+            });
+            branchField.style.display = 'none';
+            branchScopeHint.style.display = 'none';
+        }
+        
+        if(editId) {
+            const c = cases.find(ca => ca.id === editId);
+            if(c) {
+                title.innerText = '编辑案例 / 覆盖文件';
+                document.getElementById('caseCustomer').value = c.customer;
+                document.getElementById('caseIndustry').value = c.industry;
+                document.getElementById('caseBranch').value = c.branch || '';
+                const scopeRad = document.querySelector(`input[name="scope"][value="${c.scope}"]`);
+                if(scopeRad) scopeRad.checked = true;
+                document.getElementById('fileStatus').innerText = '已存在文件，可选重新上传覆盖';
+                document.getElementById('caseFile').value = '';
+                
+                // 编辑时如果是分公司私有，显示所属分公司字段（仅总部）
+                if(currentRole === 'headquarters' && c.scope === 'branch_private') {
+                    branchField.style.display = '';
+                    branchScopeHint.style.display = 'block';
+                }
+            }
+        } else {
+            title.innerText = '上传新案例';
+            document.getElementById('caseCustomer').value = '';
+            document.getElementById('caseIndustry').value = '餐饮';
+            document.getElementById('caseBranch').value = '';
+            document.querySelector(`input[name="scope"][value="headquarters_private"]`).checked = true;
+            document.getElementById('caseFile').value = '';
+            document.getElementById('fileStatus').innerText = '未选择文件';
+        }
+        modal.classList.add('show');
+    }
+    function closeModal() { document.getElementById('caseModal').classList.remove('show'); currentEditId = null; }
+    function saveCase() {
+        const customer = document.getElementById('caseCustomer').value.trim();
+        const industry = document.getElementById('caseIndustry').value;
+        const branchVal = document.getElementById('caseBranch').value;
+        const scope = document.querySelector('input[name="scope"]:checked')?.value;
+        if(!customer || !scope) { alert('请填写完整信息'); return; }
+        const fileInput = document.getElementById('caseFile');
+        let fileMsg = fileInput.files.length ? fileInput.files[0].name : null;
+        if(currentEditId){
+            const idx = cases.findIndex(c => c.id === currentEditId);
+            if(idx !== -1){
+                cases[idx].customer = customer;
+                cases[idx].industry = industry;
+                cases[idx].branch = branchVal === '' ? '' : branchVal;
+                cases[idx].scope = scope;
+                cases[idx].updated = new Date().toISOString().slice(0,10);
+                if(fileMsg) cases[idx].fileRef = fileMsg;
+                cases[idx].name = `${customer}_${industry}`;
+            }
+        } else {
+            const newId = 'c' + Date.now();
+            const newName = `${customer}_${industry}`;
+            cases.push({
+                id: newId, name: newName, customer, industry, branch: branchVal || '', scope,
+                fileRef: fileMsg || 'demo.ppt', updated: new Date().toISOString().slice(0,10)
+            });
+        }
+        renderTable();
+        closeModal();
+    }
+    function openEditCase(id) { openUploadModal(id); }
+    function openOverwriteCase(id) { openUploadModal(id); }  // 覆盖也是编辑
+
+    // 初始化角色/库交互
+    function setRole(role) {
+        currentRole = role;
+        document.querySelectorAll('.role-btn').forEach(btn => {
+            if(btn.dataset.role === role) btn.classList.add('active');
+            else btn.classList.remove('active');
+        });
+        // 隐藏/显示总部案例库标签
+        const headquartersTab = document.getElementById('headquartersLibTab');
+        if(role === 'branch') {
+            // 分公司人员隐藏总部案例库
+            headquartersTab.style.display = 'none';
+            // 默认显示分公司案例库
+            currentLib = "branch_lib";
+        } else {
+            // 总部人员显示总部案例库
+            headquartersTab.style.display = '';
+            currentLib = "headquarters_lib";
+        }
+        highlightLibTab();
+        updateBranchSelectorVisibility();
+        renderTable();
+    }
+    function setLibrary(lib) {
+        currentLib = lib;
+        highlightLibTab();
+        updateBranchSelectorVisibility();
+        renderTable();
+    }
+    function highlightLibTab() {
+        document.querySelectorAll('.lib-tab').forEach(tab => {
+            if(tab.dataset.lib === currentLib) tab.classList.add('active');
+            else tab.classList.remove('active');
+        });
+    }
+    function updateBranchSelectorVisibility() {
+        const wrapper = document.getElementById('branchSelectorWrapper');
+        if(currentLib === 'branch_lib' && currentRole === 'headquarters') {
+            wrapper.style.display = 'block';
+        } else {
+            wrapper.style.display = 'none';
+        }
+        if(currentLib !== 'branch_lib') selectedBranches = [];
+    }
+    // 多选分公司面板
+    document.getElementById('branchDropdownBtn')?.addEventListener('click', () => {
+        document.getElementById('branchPanel').classList.toggle('show');
+    });
+    document.getElementById('confirmBranchSelect')?.addEventListener('click', () => {
+        const checkboxes = document.querySelectorAll('#branchPanel input[type="checkbox"]');
+        selectedBranches = Array.from(checkboxes).filter(cb => cb.checked).map(cb => cb.value);
+        document.getElementById('branchPanel').classList.remove('show');
+        renderTable();
+    });
+    document.addEventListener('click', function(e) {
+        const panel = document.getElementById('branchPanel');
+        if(panel && !panel.contains(e.target) && e.target.id !== 'branchDropdownBtn') panel.classList.remove('show');
+    });
+    // 筛选重置
+    document.getElementById('resetFilterBtn')?.addEventListener('click', () => {
+        document.getElementById('filterCustomer').value = '';
+        document.getElementById('filterIndustry').value = '';
+        document.getElementById('filterBranch').value = '';
+        document.getElementById('filterScope').value = '';
+        renderTable();
+    });
+    document.getElementById('searchBtn')?.addEventListener('click', () => renderTable());
+    document.getElementById('uploadCaseBtn')?.addEventListener('click', () => openUploadModal(null));
+    document.getElementById('closeModalBtn')?.addEventListener('click', closeModal);
+    document.getElementById('saveCaseBtn')?.addEventListener('click', saveCase);
+    // 监听角色切换
+    document.querySelectorAll('.role-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => setRole(btn.dataset.role));
+    });
+    document.querySelectorAll('.lib-tab').forEach(tab => {
+        tab.addEventListener('click', () => setLibrary(tab.dataset.lib));
+    });
+    // 检查分公司私有时分公司必选提示，并显示所属分公司字段（仅总部人员）
+    document.querySelectorAll('input[name="scope"]').forEach(radio => {
+        radio.addEventListener('change', () => {
+            const hint = document.getElementById('branchScopeHint');
+            const branchField = document.getElementById('branchField');
+            const isBranchPrivate = document.querySelector('input[name="scope"]:checked')?.value === 'branch_private';
+            
+            if(currentRole === 'headquarters') {
+                // 总部人员：选择分公司私有时显示所属分公司字段
+                if(isBranchPrivate) {
+                    hint.style.display = 'block';
+                    branchField.style.display = '';
+                } else {
+                    hint.style.display = 'none';
+                    branchField.style.display = 'none';
+                }
+            } else {
+                // 分公司人员：始终隐藏所属分公司字段
+                hint.style.display = 'none';
+                branchField.style.display = 'none';
+            }
+        });
+    });
+    // 初始渲染
+    setRole('headquarters');
+    setLibrary('headquarters_lib');
+</script>
+</body>
+</html>

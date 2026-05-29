@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>小T营销助手·生成中</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: #f2f4f8;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, 'Noto Sans', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 420px;
+            background: #ffffff;
+            border-radius: 32px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05), 0 2px 4px rgba(0, 0, 0, 0.02);
+            padding: 40px 32px;
+            text-align: center;
+        }
+
+        .logo-area {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 28px;
+            background: linear-gradient(145deg, #2a7de1, #1e40af);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .logo-icon {
+            font-size: 48px;
+            color: white;
+        }
+
+        .logo-area::before {
+            content: '';
+            position: absolute;
+            width: 120%;
+            height: 120%;
+            border-radius: 50%;
+            background: linear-gradient(145deg, #2a7de1, #1e40af);
+            opacity: 0.3;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 0.3;
+            }
+            50% {
+                transform: scale(1.1);
+                opacity: 0.1;
+            }
+        }
+
+        .title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: #6c7a91;
+            margin-bottom: 36px;
+        }
+
+        .progress-container {
+            width: 100%;
+            margin-bottom: 32px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #2a7de1, #1e40af);
+            border-radius: 4px;
+            width: 0%;
+            transition: width 0.3s ease;
+            position: relative;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 1.5s infinite;
+        }
+
+        @keyframes shimmer {
+            0% {
+                transform: translateX(-100%);
+            }
+            100% {
+                transform: translateX(100%);
+            }
+        }
+
+        .progress-text {
+            font-size: 13px;
+            color: #6c7a91;
+            margin-top: 12px;
+            text-align: center;
+        }
+
+        .stage-indicators {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 32px;
+            padding: 0 8px;
+        }
+
+        .stage-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+        }
+
+        .stage-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #e2e8f0;
+            transition: all 0.3s ease;
+        }
+
+        .stage-dot.active {
+            background: #2a7de1;
+            box-shadow: 0 0 0 4px rgba(42, 125, 225, 0.15);
+        }
+
+        .stage-dot.completed {
+            background: #1e40af;
+        }
+
+        .stage-label {
+            font-size: 11px;
+            color: #94a3b8;
+            white-space: nowrap;
+        }
+
+        .stage-label.active {
+            color: #2a7de1;
+        }
+
+        .stage-label.completed {
+            color: #1e40af;
+        }
+
+        .tips-card {
+            background: #fafcff;
+            border-radius: 20px;
+            padding: 16px;
+            border: 1px solid #e0f2fe;
+        }
+
+        .tips-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #1e40af;
+            margin-bottom: 8px;
+        }
+
+        .tips-content {
+            font-size: 12px;
+            color: #6c7a91;
+            line-height: 1.6;
+        }
+
+        .auto-nav-hint {
+            font-size: 12px;
+            color: #94a3b8;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+<div class="app-container">
+    <div class="logo-area">
+        <span class="logo-icon">⚡</span>
+    </div>
+    
+    <h1 class="title">小T助手生成中</h1>
+    <p class="subtitle">正在根据您的需求智能生成方案</p>
+
+    <div class="progress-container">
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div class="progress-text" id="progressText">正在分析需求...</div>
+    </div>
+
+    <div class="stage-indicators">
+        <div class="stage-item">
+            <div class="stage-dot" id="stage1"></div>
+            <span class="stage-label" id="stage1Label">分析需求</span>
+        </div>
+        <div class="stage-item">
+            <div class="stage-dot" id="stage2"></div>
+            <span class="stage-label" id="stage2Label">匹配方案</span>
+        </div>
+        <div class="stage-item">
+            <div class="stage-dot" id="stage3"></div>
+            <span class="stage-label" id="stage3Label">生成内容</span>
+        </div>
+        <div class="stage-item">
+            <div class="stage-dot" id="stage4"></div>
+            <span class="stage-label" id="stage4Label">完成</span>
+        </div>
+    </div>
+
+    <div class="tips-card">
+        <div class="tips-title">生成说明</div>
+        <div class="tips-content">
+            系统正在根据您填写的客户信息和业务场景，智能匹配最优方案模板，生成专属的营销方案文档。预计需要10-15秒。
+        </div>
+    </div>
+
+    <p class="auto-nav-hint">方案生成完成后将自动跳转...</p>
+</div>
+
+<script>
+    const stages = [
+        { text: '正在分析需求...', progress: 0 },
+        { text: '正在匹配方案模板...', progress: 25 },
+        { text: '正在生成方案内容...', progress: 50 },
+        { text: '正在优化方案结构...', progress: 75 },
+        { text: '方案生成完成！', progress: 100 }
+    ];
+
+    const stageElements = {
+        stage1: document.getElementById('stage1'),
+        stage2: document.getElementById('stage2'),
+        stage3: document.getElementById('stage3'),
+        stage4: document.getElementById('stage4'),
+        stage1Label: document.getElementById('stage1Label'),
+        stage2Label: document.getElementById('stage2Label'),
+        stage3Label: document.getElementById('stage3Label'),
+        stage4Label: document.getElementById('stage4Label')
+    };
+
+    const progressFill = document.getElementById('progressFill');
+    const progressText = document.getElementById('progressText');
+
+    let currentStage = 0;
+
+    function updateStage(stageIndex) {
+        progressFill.style.width = stages[stageIndex].progress + '%';
+        progressText.textContent = stages[stageIndex].text;
+
+        Object.keys(stageElements).forEach(key => {
+            const element = stageElements[key];
+            const stageNum = parseInt(key.replace('stage', '').replace('Label', ''));
+            if (stageNum <= stageIndex + 1) {
+                if (stageNum === stageIndex + 1) {
+                    element.classList.add('active');
+                    element.classList.remove('completed');
+                } else {
+                    element.classList.add('completed');
+                    element.classList.remove('active');
+                }
+            } else {
+                element.classList.remove('active', 'completed');
+            }
+        });
+    }
+
+    function runProgress() {
+        if (currentStage < stages.length) {
+            updateStage(currentStage);
+            currentStage++;
+            setTimeout(runProgress, currentStage === stages.length - 1 ? 800 : 1200);
+        } else {
+            setTimeout(() => {
+                window.location.href = 'YiShengChengFangAn.html';
+            }, 500);
+        }
+    }
+
+    setTimeout(runProgress, 300);
+</script>
+</body>
+</html>
