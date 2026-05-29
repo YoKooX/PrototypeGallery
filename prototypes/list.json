@@ -1,0 +1,47 @@
+{
+  "folders": [
+    {
+      "id": "xiaot-marketing",
+      "name": "小T营销",
+      "description": "小T营销的原型设计",
+      "prototypes": [
+        {
+          "name": "Caogaoxiang",
+          "filename": "caogaoxiang.html",
+          "description": "Caogaoxiang - HTML原型",
+          "size": "11.9 KB",
+          "modified": "2026-05-21"
+        },
+        {
+          "name": "Generating",
+          "filename": "generating.html",
+          "description": "Generating - HTML原型",
+          "size": "9.1 KB",
+          "modified": "2026-05-21"
+        },
+        {
+          "name": "Yishengchengfangan",
+          "filename": "YiShengChengFangAn.html",
+          "description": "Yishengchengfangan - HTML原型",
+          "size": "17.9 KB",
+          "modified": "2026-05-21"
+        },
+        {
+          "name": "Yutianbiaodan",
+          "filename": "YuTianBiaoDan.html",
+          "description": "Yutianbiaodan - HTML原型",
+          "size": "27.7 KB",
+          "modified": "2026-05-26"
+        },
+        {
+          "name": "AnLiKu",
+          "filename": "AnLiKu.html",
+          "description": "AnLiKu - HTML原型",
+          "size": "36.2 KB",
+          "modified": "2026-05-25"
+        }
+      ]
+    }
+  ],
+  "ungrouped": []
+}

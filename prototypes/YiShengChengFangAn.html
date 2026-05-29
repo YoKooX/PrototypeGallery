@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>小T营销助手·已生成方案</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: #f2f4f8;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Noto Sans', sans-serif;
+            padding: 20px 16px 40px;
+            color: #1f2a3e;
+        }
+
+        .app-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* 头部 */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        h1 {
+            font-size: 26px;
+            font-weight: 700;
+            color: #0f172a;
+            letter-spacing: -0.3px;
+        }
+
+        .back-link {
+            background: #eef2ff;
+            border-radius: 40px;
+            padding: 8px 18px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #1e40af;
+            text-decoration: none;
+            transition: 0.2s;
+            display: inline-block;
+        }
+
+        .back-link:active {
+            background: #e0e7ff;
+        }
+
+        .subhead {
+            color: #5b6e8c;
+            margin-bottom: 24px;
+            font-size: 14px;
+            border-left: 3px solid #2a7de1;
+            padding-left: 12px;
+        }
+
+        /* 方案列表 — 单列布局 */
+        .scheme-list {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            margin-bottom: 30px;
+        }
+
+        /* 卡片样式 */
+        .scheme-card {
+            background: #ffffff;
+            border-radius: 28px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+            overflow: hidden;
+            transition: all 0.2s ease;
+            border: 1px solid #edf2f7;
+        }
+
+        .card-image {
+            background: linear-gradient(145deg, #eef2fa, #e2e8f2);
+            height: 110px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #3f5e8c;
+            font-size: 34px;
+            font-weight: 500;
+            border-bottom: 1px solid #eef2ff;
+        }
+
+        .card-content {
+            padding: 18px 18px 22px;
+        }
+
+        .scheme-name {
+            font-weight: 700;
+            font-size: 18px;
+            color: #0f172a;
+            margin-bottom: 8px;
+            word-break: break-word;
+            line-height: 1.3;
+        }
+
+        .scheme-meta {
+            font-size: 13px;
+            color: #6c7a91;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .scheme-date {
+            background: #f1f5f9;
+            padding: 4px 10px;
+            border-radius: 20px;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+
+        .action-btn {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 40px;
+            padding: 8px 18px;
+            font-size: 14px;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            transition: 0.15s;
+            color: #2c3e66;
+        }
+
+        .action-btn:active {
+            background: #eef2ff;
+            transform: scale(0.96);
+        }
+
+        .copy-form-btn {
+            background: #eef2ff;
+            border-color: #cbdffc;
+            color: #1e40af;
+        }
+
+        .empty-state {
+            background: #ffffffcc;
+            border-radius: 32px;
+            padding: 60px 20px;
+            text-align: center;
+            color: #6c7a91;
+            border: 1px dashed #cbd5e1;
+            margin-top: 20px;
+        }
+
+        /* 弹窗 */
+        .modal-mask {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            visibility: hidden;
+            opacity: 0;
+            transition: 0.2s;
+        }
+
+        .modal-mask.show {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .modal-container {
+            background: white;
+            width: 320px;
+            max-width: 85%;
+            border-radius: 32px;
+            box-shadow: 0 24px 40px rgba(0, 0, 0, 0.2);
+            padding: 24px 20px 28px;
+            text-align: center;
+        }
+
+        .modal-container h3 {
+            font-size: 20px;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .modal-container input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 28px;
+            margin: 16px 0 8px;
+            font-size: 15px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .modal-buttons button {
+            flex: 1;
+            padding: 10px 0;
+            border-radius: 40px;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            background: #eef2ff;
+            color: #1e40af;
+        }
+
+        .modal-buttons button.confirm {
+            background: #2a7de1;
+            color: white;
+        }
+
+        .toast-msg {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1f2a3ecc;
+            backdrop-filter: blur(8px);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-size: 14px;
+            z-index: 1100;
+            pointer-events: none;
+            opacity: 0;
+            transition: 0.2s;
+            white-space: nowrap;
+        }
+    </style>
+</head>
+<body>
+<div class="app-container">
+    <div class="page-header">
+        <h1>已生成方案</h1>
+        <a href="#" class="back-link" id="backToFormBtn">← 返回预填</a>
+    </div>
+    <div class="subhead">
+        基于「客户名称 + 行业」自动命名 | 支持下载、重命名、复制预填表单
+    </div>
+
+    <div id="schemeListContainer" class="scheme-list">
+        <!-- 动态卡片列表 -->
+    </div>
+</div>
+
+<!-- 重命名模态框 -->
+<div id="renameModal" class="modal-mask">
+    <div class="modal-container">
+        <h3>重命名方案</h3>
+        <input type="text" id="renameInput" placeholder="请输入新名称" autocomplete="off">
+        <div class="modal-buttons">
+            <button id="renameCancelBtn">取消</button>
+            <button id="renameConfirmBtn" class="confirm">确认</button>
+        </div>
+    </div>
+</div>
+
+<div id="toastMsg" class="toast-msg"></div>
+
+<script>
+    // ---------- 模拟已有方案数据 ----------
+    let schemeStore = [
+        {
+            id: "sch_1",
+            name: "拉布布菜市场餐饮行业方案",
+            customerName: "拉布布菜市场",
+            industry: "餐饮",
+            paymentNeeds: ["门店收款", "支付分账"],
+            fundScene: "platform_unified",
+            businessDesc: "菜市场统一收银，多摊位分账",
+            painPoints: "资金归集困难，分账繁琐",
+            dailyTrans: "8000",
+            existingSystem: "自有秤具系统",
+            createdAt: "2025-05-10"
+        },
+        {
+            id: "sch_2",
+            name: "玖门门店进销存管理方案",
+            customerName: "玖门门店",
+            industry: "零售",
+            paymentNeeds: ["门店收款", "大额支付"],
+            fundScene: "store_independent",
+            businessDesc: "连锁便利店进销存一体化",
+            painPoints: "多门店对账麻烦，库存不同步",
+            dailyTrans: "3000",
+            existingSystem: "收银宝",
+            createdAt: "2025-05-08"
+        },
+        {
+            id: "sch_3",
+            name: "餐饮一银收银POS方案",
+            customerName: "餐饮一银",
+            industry: "餐饮",
+            paymentNeeds: ["门店收款", "小程序支付"],
+            fundScene: "platform_unified",
+            businessDesc: "快餐连锁，扫码点餐+POS收银",
+            painPoints: "线上线下订单统一结算",
+            dailyTrans: "12000",
+            existingSystem: "美团收银",
+            createdAt: "2025-05-05"
+        },
+        {
+            id: "sch_4",
+            name: "智橙便利店零售方案",
+            customerName: "智橙便利店",
+            industry: "零售",
+            paymentNeeds: ["门店收款", "美团/抖音等平台收款"],
+            fundScene: "store_independent",
+            businessDesc: "社区便利店，支持外卖平台接单",
+            painPoints: "平台资金对账复杂",
+            dailyTrans: "2500",
+            existingSystem: "自有小程序",
+            createdAt: "2025-05-12"
+        }
+    ];
+
+    function showToast(msg, duration = 2000) {
+        const toast = document.getElementById('toastMsg');
+        toast.textContent = msg;
+        toast.style.opacity = '1';
+        setTimeout(() => {
+            toast.style.opacity = '0';
+        }, duration);
+    }
+
+    // 渲染方案列表（手机版单列）
+    function renderSchemeList() {
+        const container = document.getElementById('schemeListContainer');
+        if (!container) return;
+        if (schemeStore.length === 0) {
+            container.innerHTML = `<div class="empty-state">暂无生成的方案，前往预填表单生成首个方案</div>`;
+            return;
+        }
+        container.innerHTML = schemeStore.map(scheme => `
+            <div class="scheme-card" data-id="${scheme.id}">
+                <div class="card-image">
+                    📄 PPT 预览
+                </div>
+                <div class="card-content">
+                    <div class="scheme-name">${escapeHtml(scheme.name)}</div>
+                    <div class="scheme-meta">
+                        <span class="scheme-date">${scheme.createdAt}</span>
+                        <span>${scheme.industry} · ${escapeHtml(scheme.customerName)}</span>
+                    </div>
+                    <div class="card-actions">
+                        <div class="action-btn download-btn" data-id="${scheme.id}">下载</div>
+                        <div class="action-btn rename-btn" data-id="${scheme.id}">重命名</div>
+                        <div class="action-btn copy-form-btn" data-id="${scheme.id}">复制预填表单</div>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+
+        // 绑定事件（委托）
+        document.querySelectorAll('.download-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const card = btn.closest('.scheme-card');
+                const id = card?.dataset.id;
+                if (id) handleDownload(id);
+            });
+        });
+        document.querySelectorAll('.rename-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const card = btn.closest('.scheme-card');
+                const id = card?.dataset.id;
+                if (id) openRenameModal(id);
+            });
+        });
+        document.querySelectorAll('.copy-form-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const card = btn.closest('.scheme-card');
+                const id = card?.dataset.id;
+                if (id) copyToPreFillForm(id);
+            });
+        });
+    }
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+
+    // 下载模拟
+    function handleDownload(schemeId) {
+        const scheme = schemeStore.find(s => s.id === schemeId);
+        if (!scheme) return;
+        showToast(`正在下载「${scheme.name}.pptx」 (演示模式)`, 1500);
+        // 模拟下载blob
+        const blob = new Blob([`【演示方案】\n客户：${scheme.customerName}\n行业：${scheme.industry}\n需求：${scheme.painPoints || '无'}\n生成时间：${scheme.createdAt}`], {type: "application/vnd.openxmlformats-officedocument.presentationml.presentation"});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${scheme.name}.pptx`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+
+    // 重命名相关
+    let currentRenameId = null;
+    function openRenameModal(id) {
+        const scheme = schemeStore.find(s => s.id === id);
+        if (!scheme) return;
+        currentRenameId = id;
+        const modal = document.getElementById('renameModal');
+        const input = document.getElementById('renameInput');
+        input.value = scheme.name;
+        modal.classList.add('show');
+        input.focus();
+    }
+
+    function closeRenameModal() {
+        document.getElementById('renameModal').classList.remove('show');
+        currentRenameId = null;
+    }
+
+    function confirmRename() {
+        const newName = document.getElementById('renameInput').value.trim();
+        if (!newName) {
+            showToast('名称不能为空', 1000);
+            return;
+        }
+        if (currentRenameId) {
+            const scheme = schemeStore.find(s => s.id === currentRenameId);
+            if (scheme) {
+                scheme.name = newName;
+                renderSchemeList();
+                showToast(`已重命名为「${newName}」`, 1200);
+            }
+        }
+        closeRenameModal();
+    }
+
+    // 复制预填表单：将方案中存储的客户信息存入 localStorage，并提示跳转预填页
+    function copyToPreFillForm(schemeId) {
+        const scheme = schemeStore.find(s => s.id === schemeId);
+        if (!scheme) return;
+
+        // 构建预填数据（与预填表单字段对应）
+        const prefillData = {
+            customerName: scheme.customerName || '',
+            customerType: inferCustomerType(scheme),      // 简单推导，也可以从原方案存储中读取，演示保存
+            industry: scheme.industry,
+            paymentNeeds: scheme.paymentNeeds || [],
+            fundScene: scheme.fundScene || 'platform_unified',
+            businessDesc: scheme.businessDesc || '',
+            painPoints: scheme.painPoints || '',
+            dailyTrans: scheme.dailyTrans || '',
+            existingSystem: scheme.existingSystem || ''
+        };
+        // 保存到 localStorage
+        localStorage.setItem('t_marketing_prefill_form', JSON.stringify(prefillData));
+        showToast(`已复制「${scheme.name}」信息到预填表单`, 1500);
+        // 延迟后跳转到预填页面（由于当前没有预填页面的独立url，使用返回链接行为模拟）
+        setTimeout(() => {
+            // 调用返回预填（实际开发中可 redirect 到表单页面）
+            window.location.href = 'prefill_form.html';  // 假设预填页面地址，由于原型无此页，展示提示
+            // 同时显示提示，若无法跳转则保留原页面
+            console.log('跳转至预填表单页面，携带数据', prefillData);
+        }, 200);
+    }
+
+    // 辅助推导客户类型，基于行业或已有信息简单推断（演示）
+    function inferCustomerType(scheme) {
+        if (scheme.customerType) return scheme.customerType;
+        const ind = scheme.industry;
+        if (ind === '餐饮' || ind === '零售') return '连锁门店';
+        if (ind === '保险') return '线上平台';
+        return '线上平台';
+    }
+
+    // 返回预填按钮：同时可检查是否有待加载数据
+    function goToPrefill() {
+        // 模拟返回，可携带已有草稿等
+        showToast('返回预填表单（可手动刷新预填页）', 1000);
+        // 实际开发可跳转
+        // window.location.href = '预填页地址';
+    }
+
+    // 绑定模态框事件
+    function bindModalEvents() {
+        const modal = document.getElementById('renameModal');
+        const confirmBtn = document.getElementById('renameConfirmBtn');
+        const cancelBtn = document.getElementById('renameCancelBtn');
+        confirmBtn.onclick = confirmRename;
+        cancelBtn.onclick = closeRenameModal;
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeRenameModal();
+        });
+    }
+
+    // 页面初始化
+    function init() {
+        renderSchemeList();
+        bindModalEvents();
+        const backBtn = document.getElementById('backToFormBtn');
+        if (backBtn) {
+            backBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                goToPrefill();
+            });
+        }
+    }
+
+    init();
+</script>
+</body>
+</html>
