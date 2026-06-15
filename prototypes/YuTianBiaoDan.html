@@ -42,16 +42,37 @@
         .action-top-btn {
             background: #2a7de1;
             border: none;
-            border-radius: 60px;
-            padding: 14px 28px;
-            font-size: 18px;
-            font-weight: 600;
             color: white;
+            padding: 12px 28px;
+            border-radius: 25px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .action-top-btn:hover {
+            background: #1e6dd6;
+            transform: translateY(-1px);
+        }
+
+        .action-top-btn-secondary {
+            background: white;
+            border: 1px solid #cbd5e1;
+            border-radius: 48px;
+            padding: 14px 28px;
+            font-size: 16px;
+            font-weight: 600;
+            text-align: center;
+            color: #475569;
             cursor: pointer;
             transition: all 0.2s ease;
-            box-shadow: 0 4px 8px rgba(42, 125, 225, 0.2);
-            white-space: nowrap;
-            letter-spacing: 1px;
+            margin-left: 12px;
+        }
+
+        .action-top-btn-secondary:active {
+            background: #f1f5f9;
+            transform: scale(0.97);
         }
 
         .action-top-btn:active {
@@ -348,6 +369,7 @@
     <!-- 头部：仅放大的【已生成方案】按钮，无聊天框 -->
     <div class="header-with-btn">
         <button class="action-top-btn" id="generateDirectBtn">已生成方案</button>
+        <button class="action-top-btn action-top-btn-secondary" id="draftBoxBtn">草稿箱</button>
     </div>
 
     <!-- 预填内容表单 -->
@@ -611,6 +633,11 @@
         window.location.href = 'YiShengChengFangAn.html';
     }
 
+    // ========= 新增：【草稿箱】按钮：直接跳转到草稿箱界面 =========
+    function onOpenDraftBox() {
+        window.location.href = 'caogaoxiang.html';
+    }
+
     // ========= 2. 【保存到草稿箱】：不校验必填，保存到草稿列表并跳转 =========
     function onSaveDraft() {
         const formData = collectFormData();
@@ -657,6 +684,7 @@
 
     // 绑定事件
     document.getElementById('generateDirectBtn').addEventListener('click', onDirectGenerate);
+    document.getElementById('draftBoxBtn').addEventListener('click', onOpenDraftBox);
     document.getElementById('saveDraftBtn').addEventListener('click', onSaveDraft);
     document.getElementById('submitFormBtn').addEventListener('click', onSubmitForm);
 
