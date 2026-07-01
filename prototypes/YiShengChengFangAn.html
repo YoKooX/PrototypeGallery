@@ -57,6 +57,22 @@
             background: #e0e7ff;
         }
 
+        .action-top-btn {
+            background: #2a7de1;
+            color: white;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 40px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .action-top-btn:hover {
+            background: #1e6dd6;
+        }
+
         .subhead {
             color: #5b6e8c;
             margin-bottom: 24px;
@@ -260,7 +276,11 @@
 <div class="app-container">
     <div class="page-header">
         <h1>已生成方案</h1>
-        <a href="#" class="back-link" id="backToFormBtn">← 返回预填</a>
+        <div style="display: flex; gap: 10px;">
+            <button class="action-top-btn" id="generateNewBtn">生成新方案</button>
+            <a href="#" class="back-link" id="goToCaseLibBtn">案例库</a>
+            <button class="back-link" id="logoutBtn" style="border: none; cursor: pointer;">退出登录</button>
+        </div>
     </div>
     <div class="subhead">
         基于「客户名称 + 行业」自动命名 | 支持下载、重命名、复制预填表单
@@ -286,6 +306,12 @@
 <div id="toastMsg" class="toast-msg"></div>
 
 <script>
+    // ---------- 登录验证 ----------
+    const isLoggedIn = localStorage.getItem('t_marketing_logged_in');
+    if (isLoggedIn !== 'true') {
+        window.location.href = 'login.html';
+    }
+
     // ---------- 模拟已有方案数据 ----------
     let schemeStore = [
         {
@@ -530,11 +556,25 @@
     function init() {
         renderSchemeList();
         bindModalEvents();
-        const backBtn = document.getElementById('backToFormBtn');
-        if (backBtn) {
-            backBtn.addEventListener('click', (e) => {
+        const caseLibBtn = document.getElementById('goToCaseLibBtn');
+        if (caseLibBtn) {
+            caseLibBtn.addEventListener('click', (e) => {
                 e.preventDefault();
-                goToPrefill();
+                window.location.href = 'AnLiKu.html';
+            });
+        }
+        const logoutBtn = document.getElementById('logoutBtn');
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', () => {
+                localStorage.removeItem('t_marketing_logged_in');
+                localStorage.removeItem('t_marketing_user');
+                window.location.href = 'login.html';
+            });
+        }
+        const generateNewBtn = document.getElementById('generateNewBtn');
+        if (generateNewBtn) {
+            generateNewBtn.addEventListener('click', () => {
+                window.location.href = 'YuTianBiaoDan.html';
             });
         }
     }

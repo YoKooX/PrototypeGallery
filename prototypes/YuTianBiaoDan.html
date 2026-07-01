@@ -533,6 +533,12 @@
 <div id="silentToast" class="silent-toast"></div>
 
 <script>
+    // ---------- 登录验证 ----------
+    const isLoggedIn = localStorage.getItem('t_marketing_logged_in');
+    if (isLoggedIn !== 'true') {
+        window.location.href = 'login.html';
+    }
+
     // ---------- 资金管理场景联动 (规则依据表格) ----------
     const fundSceneOptions = [
         { value: "platform_unified", label: "平台/品牌方统一收款" },
@@ -702,10 +708,16 @@
                 if (data.industry) document.getElementById('industry').value = data.industry;
                 // 支付需求回填
                 if (data.paymentNeeds && data.paymentNeeds.length) {
-                    const checkboxes = document.querySelectorAll('#paymentNeedsGroup input');
+                    const checkboxes = document.querySelectorAll('#paymentMultiselectPanel input[type="checkbox"]');
                     checkboxes.forEach(cb => {
                         if (data.paymentNeeds.includes(cb.value)) cb.checked = true;
                     });
+                    // 更新下拉框显示文本
+                    if (data.paymentNeeds.length <= 3) {
+                        document.getElementById('paymentSelectedText').textContent = data.paymentNeeds.join('、');
+                    } else {
+                        document.getElementById('paymentSelectedText').textContent = `已选${data.paymentNeeds.length}项`;
+                    }
                 }
                 // 资金场景回填（非连锁门店下恢复选中）
                 if (data.fundScene && data.customerType !== "连锁门店") {
@@ -713,9 +725,6 @@
                     if (radioToCheck) radioToCheck.checked = true;
                 }
                 if (data.businessDesc) document.getElementById('businessDesc').value = data.businessDesc;
-                if (data.painPoints) document.getElementById('painPoints').value = data.painPoints;
-                if (data.dailyTrans) document.getElementById('dailyTrans').value = data.dailyTrans;
-                if (data.existingSystem) document.getElementById('existingSystem').value = data.existingSystem;
                 showSilentToast("已自动载入上次草稿内容", false);
             } catch(e) {}
         }

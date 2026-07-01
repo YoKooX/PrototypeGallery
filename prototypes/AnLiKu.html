@@ -471,6 +471,12 @@
 </div>
 
 <script>
+    // ---------- 登录验证 ----------
+    const isLoggedIn = localStorage.getItem('t_marketing_logged_in');
+    if (isLoggedIn !== 'true') {
+        window.location.href = 'login.html';
+    }
+
     // ---------- 模拟案例库数据 ----------
     let cases = [
         // 总部私有案例
