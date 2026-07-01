@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>小T营销助手·登录</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: #f2f4f8;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, 'Noto Sans', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px 16px;
+            color: #1f2a3e;
+        }
+
+        /* 登录容器 */
+        .login-container {
+            width: 100%;
+            max-width: 400px;
+        }
+
+        /* 登录卡片 */
+        .login-card {
+            background: #ffffff;
+            border-radius: 32px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05), 0 2px 4px rgba(0, 0, 0, 0.02);
+            overflow: hidden;
+            padding: 40px 32px 36px;
+        }
+
+        /* Logo区域 */
+        .login-header {
+            text-align: center;
+            margin-bottom: 36px;
+        }
+
+        .login-logo {
+            width: 72px;
+            height: 72px;
+            background: linear-gradient(135deg, #2a7de1 0%, #1e6dd6 100%);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            box-shadow: 0 4px 12px rgba(42, 125, 225, 0.3);
+        }
+
+        .login-logo-text {
+            font-size: 28px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .login-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1f2a3e;
+            margin-bottom: 8px;
+        }
+
+        .login-subtitle {
+            font-size: 14px;
+            color: #64748b;
+        }
+
+        /* 表单样式 */
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .form-item {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-item label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1f2a3e;
+        }
+
+        .form-item input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            font-size: 15px;
+            color: #1f2a3e;
+            background: #ffffff;
+            transition: all 0.2s ease;
+        }
+
+        .form-item input::placeholder {
+            color: #94a3b8;
+        }
+
+        .form-item input:focus {
+            outline: none;
+            border-color: #2a7de1;
+            box-shadow: 0 0 0 3px rgba(42, 125, 225, 0.1);
+        }
+
+        /* 记住登录 */
+        .remember-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: -4px;
+        }
+
+        .remember-row input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            accent-color: #2a7de1;
+            cursor: pointer;
+        }
+
+        .remember-row label {
+            font-size: 13px;
+            color: #64748b;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        /* 登录按钮 */
+        .login-btn {
+            width: 100%;
+            padding: 15px 0;
+            background: linear-gradient(135deg, #2a7de1 0%, #1e6dd6 100%);
+            border: none;
+            border-radius: 48px;
+            font-size: 16px;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-top: 8px;
+            box-shadow: 0 4px 12px rgba(42, 125, 225, 0.3);
+        }
+
+        .login-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(42, 125, 225, 0.4);
+        }
+
+        .login-btn:active {
+            transform: scale(0.98);
+        }
+
+        /* 错误提示 */
+        .error-tip {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 12px;
+            padding: 12px 14px;
+            font-size: 13px;
+            color: #dc2626;
+            display: none;
+        }
+
+        .error-tip.show {
+            display: block;
+        }
+
+        /* 底部版权 */
+        .login-footer {
+            text-align: center;
+            margin-top: 24px;
+            font-size: 12px;
+            color: #94a3b8;
+        }
+
+        /* 演示提示 */
+        .demo-hint {
+            background: #f0f9ff;
+            border: 1px solid #bae6fd;
+            border-radius: 12px;
+            padding: 14px 16px;
+            margin-bottom: 24px;
+            font-size: 13px;
+            color: #0369a1;
+        }
+
+        .demo-hint strong {
+            display: block;
+            margin-bottom: 4px;
+            font-size: 13px;
+        }
+
+        .demo-hint span {
+            color: #64748b;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <div class="login-logo">
+                    <span class="login-logo-text">T</span>
+                </div>
+                <h1 class="login-title">小T营销助手</h1>
+                <p class="login-subtitle">智能营销方案生成平台</p>
+            </div>
+
+            <div class="demo-hint">
+                <strong>演示账号</strong>
+                <span>用户名：admin &nbsp;|&nbsp; 密码：admin123</span>
+            </div>
+
+            <div class="error-tip" id="errorTip">用户名或密码错误，请重试</div>
+
+            <form class="login-form" id="loginForm" onsubmit="return handleLogin(event)">
+                <div class="form-item">
+                    <label for="username">用户名</label>
+                    <input type="text" id="username" placeholder="请输入用户名" autocomplete="off">
+                </div>
+
+                <div class="form-item">
+                    <label for="password">密码</label>
+                    <input type="password" id="password" placeholder="请输入密码" autocomplete="off">
+                </div>
+
+                <div class="remember-row">
+                    <input type="checkbox" id="rememberMe">
+                    <label for="rememberMe">记住登录状态</label>
+                </div>
+
+                <button type="submit" class="login-btn">登 录</button>
+            </form>
+        </div>
+
+        <div class="login-footer">
+            &copy; 2025 小T营销助手 · 智能方案生成
+        </div>
+    </div>
+
+    <script>
+        // 模拟用户数据（实际项目中应从后端验证）
+        const users = [
+            { username: 'admin', password: 'admin123', name: '管理员' },
+            { username: 'zhangsan', password: '123456', name: '张三' },
+            { username: 'lisi', password: '123456', name: '李四' }
+        ];
+
+        // 页面加载时检查是否已登录
+        function checkLoginStatus() {
+            const isLoggedIn = localStorage.getItem('t_marketing_logged_in');
+            if (isLoggedIn === 'true') {
+                // 已登录，直接跳转
+                window.location.href = 'YiShengChengFangAn.html';
+            }
+        }
+
+        // 处理登录
+        function handleLogin(event) {
+            event.preventDefault();
+            
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            const rememberMe = document.getElementById('rememberMe').checked;
+            const errorTip = document.getElementById('errorTip');
+
+            // 简单验证
+            if (!username || !password) {
+                errorTip.textContent = '请输入用户名和密码';
+                errorTip.classList.add('show');
+                return false;
+            }
+
+            // 验证用户（这里使用前端模拟验证，实际项目应调用后端API）
+            const user = users.find(u => u.username === username && u.password === password);
+
+            if (user) {
+                // 登录成功
+                errorTip.classList.remove('show');
+                
+                // 保存登录状态
+                localStorage.setItem('t_marketing_logged_in', 'true');
+                localStorage.setItem('t_marketing_user', JSON.stringify({
+                    username: user.username,
+                    name: user.name
+                }));
+
+                // 跳转到已生成方案页面
+                window.location.href = 'YiShengChengFangAn.html';
+            } else {
+                // 登录失败
+                errorTip.textContent = '用户名或密码错误，请重试';
+                errorTip.classList.add('show');
+            }
+
+            return false;
+        }
+
+        // 输入时隐藏错误提示
+        document.getElementById('username').addEventListener('input', function() {
+            document.getElementById('errorTip').classList.remove('show');
+        });
+        document.getElementById('password').addEventListener('input', function() {
+            document.getElementById('errorTip').classList.remove('show');
+        });
+
+        // 页面加载时检查登录状态
+        checkLoginStatus();
+    </script>
+</body>
+</html>
